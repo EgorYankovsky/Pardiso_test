@@ -166,6 +166,7 @@ void FromRSFToCSR_Real_2_Sym(int nb, int *ig, int *jg, double *di, double *gg,
 	}
 }
 
+
 int _tmain(int argc, _TCHAR* argv[])
 {
 	logfile.open("pardiso64.log");
@@ -199,8 +200,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		   	usage: should be declared as zeros array size of 64. 
 				   Should stay immutable if matrix's type doesn't changes
 	*/
-	void *pt[64]; for (int i(0); i < 64; ++i) pt[i] = 0;
-
+	MKL_INT pt[64]; for (int i(0); i < 64; ++i) pt[i] = 0;
 
 	/*
 		2. const MKL_INT *maxfct
@@ -316,10 +316,11 @@ int _tmain(int argc, _TCHAR* argv[])
 			recommendation: see Intel MKL documentation for more.
 	*/
 	MKL_INT iparm[64];
-	iparm[0] = 0; //iparm(2) - iparm(64) are filled with default values.
+	iparm[0] = 1; //iparm(2) - iparm(64) are filled with default values.
 
 				  //iparm[0] = 1; //You must supply all values in components iparm(2) - iparm(64).
 	for (i = 1; i < 64; i++) iparm[i] = 0;
+	iparm[0] = 1;   // Нет вывода сообщений
 
 
 	/*
@@ -357,7 +358,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		   	description: variable of error.
 		   	usage: if something went wrong PARDISO returns error value at this variable 
 	*/
-	MKL_INT *error = 0;
+	MKL_INT error = 0;
 
 
 	// nb
@@ -410,7 +411,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	perm = new MKL_INT[nb];
 
 	cout << "pardiso start.." << endl << flush;
-
 	PARDISO(
 		pt,			// 1
 		&maxfct,	// 2
@@ -427,9 +427,28 @@ int _tmain(int argc, _TCHAR* argv[])
 		&msglvl,	// 13
 		pr,			// 14
 		x,			// 15
-		error		// 16
+		&error		// 16
 	);
 
+	phase = -1;
+	PARDISO(
+		pt, 
+		&maxfct, 
+		&mnum, 
+		&mtype, 
+		&phase, 
+		&n, 
+		a, 
+		ia, 
+		ja, 
+		perm, 
+		&nrhs, 
+		iparm, 
+		&msglvl, 
+		pr, 
+		x, 
+		&error
+	);
 
 	clock_t time = (clock() - begin) / CLOCKS_PER_SEC;
 

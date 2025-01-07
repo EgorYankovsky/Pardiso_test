@@ -104,12 +104,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Program Files (x86)\Intel\oneAPI\mkl\2022.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Intel\oneAPI\mkl\latest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Program Files (x86)\Intel\oneAPI\mkl\2022.1.0\include;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>C:\Program Files (x86)\Intel\oneAPI\mkl\latest\lib\intel64\mkl_intel_lp64.lib;C:\Program Files (x86)\Intel\oneAPI\mkl\latest\lib\intel64\mkl_sequential.lib;C:\Program Files (x86)\Intel\oneAPI\mkl\latest\lib\intel64\mkl_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -141,6 +142,9 @@
     <None Include="jg" />
     <None Include="kuslau2" />
     <None Include="pr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="helpMePleaseDestroyThisPARDISO.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
