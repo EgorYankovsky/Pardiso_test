@@ -187,9 +187,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	double *di = NULL;
 	double *ggl = NULL;
 
-	clock_t begin = clock();
-
-
 	/* PARDISO() args description */
 
 
@@ -200,7 +197,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		   	usage: should be declared as zeros array size of 64. 
 				   Should stay immutable if matrix's type doesn't changes
 	*/
-	MKL_INT pt[64]; for (int i(0); i < 64; ++i) pt[i] = 0;
+	MKL_INT pt[64]{}; for (int ii(0); ii < 64; ++ii) pt[ii] = 0;
 
 	/*
 		2. const MKL_INT *maxfct
@@ -315,12 +312,8 @@ int _tmain(int argc, _TCHAR* argv[])
 		   	usage: sets different PARDISO's parameters during solving SLAE
 			recommendation: see Intel MKL documentation for more.
 	*/
-	MKL_INT iparm[64];
-	iparm[0] = 1; //iparm(2) - iparm(64) are filled with default values.
-
-				  //iparm[0] = 1; //You must supply all values in components iparm(2) - iparm(64).
-	for (i = 1; i < 64; i++) iparm[i] = 0;
-	iparm[0] = 1;   // Нет вывода сообщений
+	MKL_INT iparm[64]{};
+	iparm[0] = 1; for (int ii = 1; ii < 64; ++ii) iparm[ii] = 0;
 
 
 	/*
@@ -411,6 +404,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	perm = new MKL_INT[nb];
 
 	cout << "pardiso start.." << endl << flush;
+
+	clock_t begin = clock();
+
 	PARDISO(
 		pt,			// 1
 		&maxfct,	// 2
@@ -430,25 +426,11 @@ int _tmain(int argc, _TCHAR* argv[])
 		&error		// 16
 	);
 
-	phase = -1;
-	PARDISO(
-		pt, 
-		&maxfct, 
-		&mnum, 
-		&mtype, 
-		&phase, 
-		&n, 
-		a, 
-		ia, 
-		ja, 
-		perm, 
-		&nrhs, 
-		iparm, 
-		&msglvl, 
-		pr, 
-		x, 
-		&error
-	);
+	phase = -1; // Close process.
+	PARDISO(pt, &maxfct, &mnum, &mtype, 
+			&phase, &n, a, ia, 
+			ja, perm, &nrhs, iparm, 
+			&msglvl, pr, x, &error);
 
 	clock_t time = (clock() - begin) / CLOCKS_PER_SEC;
 
